@@ -1,0 +1,21 @@
+CREATE OR REPLACE PROCEDURE proc_step3 (status OUT NUMBER) AS
+  v_total_registros NUMBER := 0;
+BEGIN
+  BEGIN
+    -- Step 3: Cruzamento com a base de ofertas
+    INSERT INTO tabela_step3
+    SELECT s2.*, o.*
+    FROM tabela_step2 s2
+    JOIN tabela_ofertas o ON s2.id_oferta = o.id_oferta;
+
+    v_total_registros := SQL%ROWCOUNT;
+    DBMS_OUTPUT.PUT_LINE('Step 3 concluído com ' || v_total_registros || ' registros.');
+
+    -- Status de sucesso
+    status := 0;
+  EXCEPTION
+    WHEN OTHERS THEN
+      DBMS_OUTPUT.PUT_LINE('Erro no Step 3: ' || SQLERRM);
+      status := 1;
+  END;
+END proc_step3;
