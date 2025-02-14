@@ -1,0 +1,32 @@
+CREATE OR REPLACE PROCEDURE pipeline_de_ofertas (step_inicial IN NUMBER) AS
+  v_status NUMBER;
+BEGIN
+  -- Step 1
+  IF step_inicial <= 1 THEN
+    proc_step1(v_status);
+    IF v_status <> 0 THEN
+      DBMS_OUTPUT.PUT_LINE('Pipeline interrompido no Step 1 devido a erro.');
+      RETURN;
+    END IF;
+  END IF;
+
+  -- Step 2
+  IF step_inicial <= 2 THEN
+    proc_step2(v_status);
+    IF v_status <> 0 THEN
+      DBMS_OUTPUT.PUT_LINE('Pipeline interrompido no Step 2 devido a erro.');
+      RETURN;
+    END IF;
+  END IF;
+
+  -- Step 3
+  IF step_inicial <= 3 THEN
+    proc_step3(v_status);
+    IF v_status <> 0 THEN
+      DBMS_OUTPUT.PUT_LINE('Pipeline interrompido no Step 3 devido a erro.');
+      RETURN;
+    END IF;
+  END IF;
+
+  DBMS_OUTPUT.PUT_LINE('Pipeline concluído com sucesso.');
+END pipeline_de_ofertas;
