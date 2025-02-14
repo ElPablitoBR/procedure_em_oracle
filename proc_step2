@@ -1,0 +1,21 @@
+CREATE OR REPLACE PROCEDURE proc_step2 (status OUT NUMBER) AS
+  v_total_registros NUMBER := 0;
+BEGIN
+  BEGIN
+    -- Step 2: Cruzamento com a tabela de faturas
+    INSERT INTO tabela_step2
+    SELECT s1.*, f.*
+    FROM tabela_step1 s1
+    JOIN tabela_faturas f ON s1.id_fatura = f.id_fatura;
+
+    v_total_registros := SQL%ROWCOUNT;
+    DBMS_OUTPUT.PUT_LINE('Step 2 concluído com ' || v_total_registros || ' registros.');
+
+    -- Status de sucesso
+    status := 0;
+  EXCEPTION
+    WHEN OTHERS THEN
+      DBMS_OUTPUT.PUT_LINE('Erro no Step 2: ' || SQLERRM);
+      status := 1;
+  END;
+END proc_step2;
