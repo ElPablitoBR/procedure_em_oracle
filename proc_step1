@@ -1,0 +1,21 @@
+CREATE OR REPLACE PROCEDURE proc_step1 (status OUT NUMBER) AS
+  v_total_registros NUMBER := 0;
+BEGIN
+  BEGIN
+    -- Step 1: Leitura da tabela principal e cruzamento com a tabela de endereços
+    INSERT INTO tabela_step1
+    SELECT p.*, e.*
+    FROM tabela_principal p
+    JOIN tabela_enderecos e ON p.id_endereco = e.id_endereco;
+    
+    v_total_registros := SQL%ROWCOUNT;
+    DBMS_OUTPUT.PUT_LINE('Step 1 concluído com ' || v_total_registros || ' registros.');
+
+    -- Status de sucesso
+    status := 0;
+  EXCEPTION
+    WHEN OTHERS THEN
+      DBMS_OUTPUT.PUT_LINE('Erro no Step 1: ' || SQLERRM);
+      status := 1;
+  END;
+END proc_step1;
